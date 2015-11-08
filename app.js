@@ -26,7 +26,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', routes);
 app.use('/users', users);
 
@@ -61,30 +60,40 @@ app.use(function(err, req, res, next) {
   });
 });
 */
-app.get('/hello',function(req,res)
+app.get('/success',function(req,res)
 {
-  console.log("Hello");
+  console.log("Success");
 });
 
-app.get('/start',function(req,res)
+app.post('/start',function(req,res)
 {
     //console.log("Hello World");
 
+    console.log("Hello "+req.body.country)
+    res.redirect('/success');
 
-
-   /* var newkey = "rsa";
-    var keyout = "C:\\Users\\arysengupta\\Documents\\Certifications_test\\openssl-0.9.8e_X64\\bin\\demoCA\\private\\cakey.pem";
-    var out = "C:\\Users\\arysengupta\\Documents\\Certifications_test\\openssl-0.9.8e_X64\\bin\\demoCA\\cacert.pem"
+    var newkey = "rsa";
+    //var keyout = "C:\\Users\\arysengupta\\Documents\\Certifications_test\\openssl-0.9.8e_X64\\bin\\demoCA\\private\\cakey.pem";
+    var keyout = "E:\\Certificate Generator\\openssl-0.9.8k_WIN32\\bin\\demoCA\\private\\cakey.pem"
+    //var out = "C:\\Users\\arysengupta\\Documents\\Certifications_test\\openssl-0.9.8e_X64\\bin\\demoCA\\cacert.pem"
+    var out = "E:\\Certificate Generator\\openssl-0.9.8k_WIN32\\bin\\demoCA\\cacert.pem";
     var password = "abcd1234";
+    //var config = path.join("C:","Users","arysengupta","Documents","Certifications_test","openssl-0.9.8e_X64","openssl.cnf")
     var config = path.join("C:","Users","arysengupta","Documents","Certifications_test","openssl-0.9.8e_X64","openssl.cnf")
     //var config = "C:\Users\arysengupta\Documents\Certifications_test\openssl-0.9.8e_X64\openssl.cnf";
     console.log("Config - "+config);
-    return openssl.exec("req.x509", {newkey: newkey+':512',keyout : keyout, out:out, passout: 'pass:' + password, config:config}, function(err, buffer) {
-      console.log("XYZ");
+    return openssl.exec("req.x509", {newkey: newkey+':512',days:'365',keyout : keyout, out:out, passout: 'pass:' + password, config:config}, function(err, buffer) {
       if(err)
       {
         console.log("------------"+err);
       }
+      runKeyToolCommands("Keytool -genkey -alias keytestalias -noprompt -keystore \"E:\\Certificate Generator\\keystore\\keystoretest.keystore\" -keyalg rsa -dname \"CN=arysengupta, OU=ES, O=Lexmark,L=Kolkata, S=WB, C=IN\" -storepass abcd1234 -keypass abcd1234",function(){
+          runKeyToolCommands("Keytool -certreq -alias keytestalias -keystore \"E:\\Certificate Generator\\keystore\\keystoretest.keystore\"   -storepass abcd1234  -keypass abcd1234  -file \"E:\\Certificate Generator\\csr\\csrtest.csr\"",function(){
+            runKeyToolCommands("Keytool -noprompt -import -alias keytestalias2 -file \"E:\\Certificate Generator\\openssl-0.9.8k_WIN32\\bin\\demoCA\\cacert.pem\" -keystore \"E:\\Certificate Generator\\keystore\\keystoretest.keystore\" -storepass abcd1234",function(){
+              
+            })
+          })
+      });
       console.log("***************"+buffer.toString());
     res.redirect("/");
   });
@@ -140,15 +149,27 @@ run_cmd( "ls", ["-help"], function(text) {
 
 */
 
-  var cmd = "Keytool -genkey -alias keytestalias -keystore C:\\Users\\arysengupta\\Documents\\Certifications_test\\openssl-0.9.8e_X64\\keystore\\keystoretest.keystore -keyalg rsa -dname \"CN=arysengupta, OU=ES, O=Lexmark,L=Kolkata, S=WB, C=IN\" -storepass abcd1234 -keypass abcd1234"
-  var exec = require('child_process').exec;
-  exec(cmd, {
-    cwd: 'C:\\Program Files\\Java\\jdk1.8.0_60\\bin'
-}, function(error, stdout, stderr) {
-   console.log("Hello"+stdout);
-   console.log("Error"+error);
-   console.log("Std error = "+stderr);
-});
+  //var cmd = "Keytool -genkey -alias keytestalias -keystore C:\\Users\\arysengupta\\Documents\\Certifications_test\\openssl-0.9.8e_X64\\keystore\\keystoretest.keystore -keyalg rsa -dname \"CN=arysengupta, OU=ES, O=Lexmark,L=Kolkata, S=WB, C=IN\" -storepass abcd1234 -keypass abcd1234"
+  function runKeyToolCommands (cmd,cb){
+        var exec = require('child_process').exec;
+        //exec(cmd, {cwd: 'C:\\Program Files\\Java\\jdk1.8.0_60\\bin'}, function(error, stdout, stderr) {
+          exec(cmd, {cwd: 'C:\\Program Files\\Java\\jdk1.8.0_60\\bin'}, function(error, stdout, stderr) {
+
+         if(error)
+         {
+            console.log(error);
+         }
+         else if(stdout)
+         {
+            console.log(stdout);
+         }
+         else{
+            console.log(stderr);
+         }
+         cb();
+      });
+  }
+
 
 //run_cmd("Keytool -genkey -alias keytestalias -keystore C:\\Users\\arysengupta\\Documents\\Certifications_test\\openssl-0.9.8e_X64\\keystore\\keystoretest.keystore -keyalg rsa -dname \"CN=arysengupta, OU=ES, O=Lexmark,L=Kolkata, S=WB, C=IN\" -storepass abcd1234 -keypass abcd1234")
 
