@@ -1,0 +1,46 @@
+﻿Keystore path = E:\Certificate Generator\keystore
+Crt path =  E:\Certificate Generator\crt
+Csr path = E:\Certificate Generator\csr
+
+
+
+
+Step 1 - req -x509 -days 365 -batch -newkey rsa:512 -keyout demoCA/private/cakey.pem -out demoCA/cacert.pem -passout pass:abcd1234 –config "E:\Certificate Generator\openssl-0.9.8k_WIN32\openssl.cnf"
+
+
+Step 2 - Keytool -genkey -alias keytestalias -noprompt -keystore "E:\Certificate Generator\keystore\keystoretest.keystore" -keyalg rsa -dname "CN=arysengupta, OU=ES, O=Lexmark,L=Kolkata, S=WB, C=IN" -storepass abcd1234 -keypass abcd1234
+
+Step 3 - Keytool -certreq -alias keytestalias -keystore "E:\Certificate Generator\keystore\keystoretest.keystore"   -storepass abcd1234  -keypass abcd1234  -file "E:\Certificate Generator\csr\csrtest.csr"
+
+[Step 2 and 3 - Key alias name must be same]
+
+Step 4 - ca -batch -policy policy_anything -in "E:\Certificate Generator\csr\csrtest.csr" -out "E:\Certificate Generator\crt\crttest.crt" -notext -passin pass:abcd1234 –config "E:\Certificate Generator\openssl-0.9.8k_WIN32\openssl.cnf"
+
+Change alias name
+
+Step 5 - Keytool -noprompt -import -alias keytestalias2 -file "E:\Certificate Generator\openssl-0.9.8k_WIN32\bin\demoCA\cacert.pem" -keystore "E:\Certificate Generator\keystore\keystoretest.keystore" -storepass abcd1234
+
+
+Not required
+//Step 6 - keytool -noprompt -import -alias keytestalias1  -file "E:\Certificate Generator\crt\crttest.crt" -keystore "E:\Certificate Generator\keystore\keystoretest.keystore" -storepass abcd1234
+
+
+Steps to do - 
+
+1. Fix keytool error. (First thing in the morning)
+2. Fix index.html with all inputs
+3. Sequentially codify all steps
+
+Note - 
+USe noprompt switch in keytool
+The KeyStore password and The Key password should be the same.
+Use -batch option for no prompt
+
+User inputs - Common name, alias name, cert-name, csr-name, keystore name,password for keystore and key
+
+
+
+
+
+
+
